@@ -46,6 +46,10 @@ func subnetting(argIP string, argMask uint, argMode byte, argN uint) {
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 	}
+
+	var ipArray [4]byte
+	var ipArrayPtr *[4]byte = &ipArray
+	stringToIP(argIP, ipArrayPtr)
 }
 
 func stringToIP(ipString string, ipArrayPointer *[4]byte) {
@@ -54,7 +58,7 @@ func stringToIP(ipString string, ipArrayPointer *[4]byte) {
 	var ipOctets [4]byte
 
 	// Read the IP backwards
-	for i := len(ipString) - 1; i >= 0; i++ {
+	for i := len(ipString) - 1; i >= 0; i-- {
 		if ipString[i] == '.' {
 			dots++ // We change octet
 			break  // Next loop iteration
