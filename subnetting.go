@@ -30,40 +30,39 @@ func main() {
 			fmt.Println("Not enough arguments. See --help")
 			os.Exit(1)
 		}
-		arg_netmask, _ := strconv.ParseInt(os.Args[2], 10, 0) // ParseInt returns an error code too
-		arg_n, _ := strconv.ParseInt(os.Args[4], 10, 0)
-		subnetting(os.Args[1], uint(arg_netmask), byte(os.Args[3][1]), uint(arg_n))
+		argNetmask, _ := strconv.ParseInt(os.Args[2], 10, 0) // ParseInt returns an error code too
+		argN, _ := strconv.ParseInt(os.Args[4], 10, 0)
+		subnetting(os.Args[1], uint(argNetmask), byte(os.Args[3][1]), uint(argN))
 	}
 }
 
 func help() {
 	fmt.Printf("[%s] Help menu: \n", os.Args[0])
 }
-func subnetting(arg_ip string, arg_mask uint, arg_mode byte, arg_n uint) {
-	fmt.Printf("Subnetting %s ", arg_ip)
-	if arg_mode == 'n' {
-		fmt.Printf("in %d subnets\n", arg_n)
-	} else if arg_mode == 'h' {
-		fmt.Printf("in subnets for %d users\n", arg_n)
+func subnetting(argIP string, argMask uint, argMode byte, argN uint) {
+	fmt.Printf("Subnetting %s ", argIP)
+	if argMode == 'n' {
+		fmt.Printf("in %d subnets\n", argN)
+	} else if argMode == 'h' {
+		fmt.Printf("in subnets for %d users\n", argN)
 	}
 }
 
-func string_to_ip(ip_string_ptr *string) [4]byte {
+func stringToIP(ipString string) [4]byte {
 	var dots uint    // Number of dots to know which octet
 	var mul byte = 1 // Weight of the parsed number in the string
-	ip_string := *ip_string_ptr
-	var ip_octets [4]byte
+	var ipOctets [4]byte
 
 	// Read the IP backwards
-	for i := len(ip_string) - 1; i >= 0; i++ {
-		if ip_string[i] == '.' {
+	for i := len(ipString) - 1; i >= 0; i++ {
+		if ipString[i] == '.' {
 			dots++ // We change octet
 			break  // Next loop iteration
 		} else {
 			mul *= 10
 		}
 		// Which ip octet to parse depends on the dots we encountered
-		ip_octets[4-dots] = mul * ip_string[i]
+		ipOctets[4-dots] = mul * ipString[i]
 	}
-	return ip_octets
+	return ipOctets
 }
