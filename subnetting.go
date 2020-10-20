@@ -15,6 +15,7 @@ A.B.C.D [1-30] -h x
 */
 func main() {
 	// Param checking
+
 	if len(os.Args) < 2 {
 		fmt.Printf("No args, type  %s --help for help\n", os.Args[0])
 		os.Exit(1)
@@ -25,6 +26,10 @@ func main() {
 		help()
 		break
 	default:
+		if len(os.Args) < 5 {
+			fmt.Println("Not enough arguments. See --help")
+			os.Exit(1)
+		}
 		arg_netmask, _ := strconv.ParseInt(os.Args[2], 10, 0) // ParseInt returns an error code too
 		arg_n, _ := strconv.ParseInt(os.Args[4], 10, 0)
 		subnetting(os.Args[1], uint(arg_netmask), byte(os.Args[3][1]), uint(arg_n))
