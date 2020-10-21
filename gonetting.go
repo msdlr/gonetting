@@ -39,26 +39,27 @@ func help() {
 	fmt.Printf("[%s] Help menu: \n", os.Args[0])
 }
 func subnetting(argIP string, argMask uint, argMode byte, argN uint) {
+
+	ipArray := [4]byte{0, 0, 0, 0}
+	var ipArrayPtr *[4]byte = &ipArray
+	var ipArgPtr *string = &argIP
+
+	// Parse the ip as string
+	stringToIP(ipArgPtr,len(argIP),ipArrayPtr)
+
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
 		fmt.Printf("in %d subnets\n", argN)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 	}
-
-	ipArray := [4]byte{0, 0, 0, 0}
-	var ipArrayPtr *[4]byte = &ipArray
-
-
-
-	stringToIP(argIP, len(argIP),ipArrayPtr)
-	fmt.Printf("\n[%d.%d.%d.%d]\n", ipArray[0], ipArray[1], ipArray[2], ipArray[3])
 }
 
-func stringToIP(ipString string, size int, ipArrayPointer *[4]byte) {
+func stringToIP(ipStringPointer *string, size int, ipArrayPointer *[4]byte) {
 	var dots uint    // Number of dots to know which octet
 	var mul byte = 1 // Weight of the parsed number in the string
 	var ipOctets [4]byte = *ipArrayPointer
+	var ipString = *ipStringPointer
 
 	// Read the IP backwards
 	for i := size - 1; i >= 0; i-- {
@@ -71,6 +72,5 @@ func stringToIP(ipString string, size int, ipArrayPointer *[4]byte) {
 		}
 		// Which ip octet to parse depends on the dots we encountered
 	}
-	fmt.Printf("\n%d.%d.%d.%d\n", ipOctets[0], ipOctets[1], ipOctets[2], ipOctets[3])
-	//return ipOctets
+	//fmt.Printf("\n%d.%d.%d.%d\n", ipOctets[0], ipOctets[1], ipOctets[2], ipOctets[3])
 }
