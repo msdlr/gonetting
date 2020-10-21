@@ -55,18 +55,19 @@ func subnetting(argIP string, argMask uint, argMode byte, argN uint) {
 func stringToIP(ipString string, ipArrayPointer *[4]byte) {
 	var dots uint    // Number of dots to know which octet
 	var mul byte = 1 // Weight of the parsed number in the string
-	var ipOctets [4]byte
-
+	var ipOctets [4]byte = *ipArrayPointer
+	ipString = "1.1.1.1"
 	// Read the IP backwards
 	for i := len(ipString) - 1; i >= 0; i-- {
 		if ipString[i] == '.' {
 			dots++ // We change octet
-			break  // Next loop iteration
+			mul = 1
+			break // Next loop iteration
 		} else {
+			ipOctets[3-dots] = mul * ('0' + ipString[i])
 			mul *= 10
 		}
 		// Which ip octet to parse depends on the dots we encountered
-		ipOctets[4-dots] = mul * ipString[i]
 	}
 	fmt.Printf("\n%d.%d.%d.%d\n", ipOctets[0], ipOctets[1], ipOctets[2], ipOctets[3])
 	//return ipOctets
