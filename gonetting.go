@@ -15,7 +15,6 @@ A.B.C.D [1-30] -h x
 */
 func main() {
 	// Param checking
-
 	if len(os.Args) < 2 {
 		fmt.Printf("No args, type  %s --help for help\n", os.Args[0])
 		os.Exit(1)
@@ -50,21 +49,21 @@ func subnetting(argIP string, argMask uint, argMode byte, argN uint) {
 	var ipArray [4]byte
 	var ipArrayPtr *[4]byte = &ipArray
 	stringToIP(argIP, ipArrayPtr)
+	fmt.Printf("\n[%d.%d.%d.%d]\n", ipArray[0], ipArray[1], ipArray[2], ipArray[3])
 }
 
 func stringToIP(ipString string, ipArrayPointer *[4]byte) {
 	var dots uint    // Number of dots to know which octet
 	var mul byte = 1 // Weight of the parsed number in the string
 	var ipOctets [4]byte = *ipArrayPointer
-	ipString = "1.1.1.1"
+
 	// Read the IP backwards
 	for i := len(ipString) - 1; i >= 0; i-- {
 		if ipString[i] == '.' {
 			dots++ // We change octet
 			mul = 1
-			break // Next loop iteration
 		} else {
-			ipOctets[3-dots] = mul * ('0' + ipString[i])
+			ipOctets[3-dots] += mul * (ipString[i]-'0')
 			mul *= 10
 		}
 		// Which ip octet to parse depends on the dots we encountered
