@@ -44,6 +44,7 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 
 	// Parse the ip and mask
 	IPstringToUint32(argIP)
+	mask2Unt32(argMask)
 
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
@@ -72,6 +73,16 @@ func IPstringToUint32(netwStr string) uint32 {
 		}
 	}
 	return IP
+}
+
+func mask2Unt32(mask uint8) uint32 {
+	var mask32 uint32 = 0
+	var i uint32
+	for i = 31; i >= 0 && mask != 0; i-- {
+		mask32 += 1 << i
+		mask--
+	}
+	return mask32
 }
 
 func log2S(n uint32) (log uint32) {
