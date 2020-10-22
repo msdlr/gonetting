@@ -120,3 +120,11 @@ func log2S(n uint8) (log uint8){
 	}
 	return uint8(res+1)
 }
+
+func PowUint(base uint8, num uint8) (result uint8){
+	if num == 1 {
+		return base
+	} else {
+		return base*PowUint(base, num-1)
+	}
+}
