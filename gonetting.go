@@ -41,10 +41,9 @@ func help() {
 }
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	// De-reference parameter
-	var ipArgPtr *string = &argIP
 
 	// Parse the ip and mask
-	IPstringToUint32(ipArgPtr, uint8(len(argIP)))
+	IPstringToUint32(argIP)
 
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
@@ -56,31 +55,23 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	}
 }
 
-func IPstringToUint32(netwStrPtr *string, size uint8) uint32 {
-	//var IP uint32 = 0
-	//var dots uint    // Number of dots to know which octet
-	//var mul byte = 1 // Weight of the parsed number in the string
-	//var ipOctets [4]uint32
-	//var ipString = *netwStrPtr
-	//
-	//// Read the IP backwards
-	//for i := size - 1; i >= 0; i-- {
-	//	if ipString[i] == '.' {
-	//		dots++ // We change octet
-	//		mul = 1
-	//	} else {
-	//		ipOctets[3-dots] += uint32(mul * (ipString[i-1] - '0'))
-	//		mul *= 10
-	//	}
-	//	// Which ip octet to parse depends on the dots we encountered
-	//}
-	//fmt.Printf("IP: %d.%d.%d.%d\n", ipOctets[0], ipOctets[1], ipOctets[2], ipOctets[3])
-	//
-	//IP = ipOctets[0]
-	//for i := 1; i < 3; i++ {
-	//	IP += ipOctets[i] << (8 * i)
-	//}
-	//return IP
+// Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
+func IPstringToUint32(netwStr string) uint32 {
+	var IP uint32 = 0
+	var dots uint8   // Number of dots to know which octet
+	var mul byte = 1 // Weight of the parsed number in the string
+
+	// Read the IP backwards
+	for i := len(netwStr) - 1; i >= 0; i-- {
+		if netwStr[i] == '.' {
+			mul = 1
+			dots++
+		} else {
+			IP += uint32(netwStr[i]-'0') * PowUint(256, uint32(dots))
+			mul *= 10
+		}
+	}
+	return IP
 }
 
 func log2S(n uint32) (log uint32) {
@@ -95,7 +86,9 @@ func log2S(n uint32) (log uint32) {
 }
 
 func PowUint(base uint32, num uint32) (result uint32) {
-	if num == 1 {
+	if num == 0 {
+		return 1
+	} else if num == 1 {
 		return base
 	} else {
 		return base * PowUint(base, num-1)
