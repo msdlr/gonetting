@@ -44,23 +44,21 @@ func help() {
 	fmt.Printf("[%s] Help menu: \n", os.Args[0])
 }
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
-	// Parse the ip and mask
-	var ip32 uint32 = IPstringToUint32(argIP)
-	var mask32 uint32 = mask2Uint32(argMask)
-	var ipOctets [4]uint8 = convertUint32ToOctets(ip32)
-	var maskOctets [4]uint8 = convertUint32ToOctets(mask32)
-	fmt.Printf("IP: %d, mask %d,\n", ip32, mask32)
-	fmt.Println(ipOctets)
-	fmt.Println(maskOctets)
 
+	if argMask == 32 {
+		os.Exit(1)
+	}
+
+	var newMask uint8 = argMask
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
-		fmt.Printf("in %d subnets\n", argN)
-
-		//getSubnets(ipArrayPtr, argMask, argN, newSubnetsPtr)
+		fmt.Printf("in %d subnets\n", log2S(uint32(argN)))
+		newMask += uint8(log2S(uint32(argN)))
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
+		newMask = uint8(log2S(PowUint(2, uint32(argN))))
 	}
+	fmt.Println("A")
 }
 
 // Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
