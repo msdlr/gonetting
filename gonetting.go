@@ -52,7 +52,7 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	var newMask uint8 = argMask
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
-		fmt.Printf("in %d subnets\n", log2S(uint32(argN)))
+		fmt.Printf("in %d subnets\n", PowUint(2, log2S(uint32(argN))))
 		newMask += uint8(log2S(uint32(argN)))
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
