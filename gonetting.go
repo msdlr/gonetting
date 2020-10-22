@@ -43,7 +43,7 @@ func help() {
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	// Parse the ip and mask
 	var ip32 uint32 = IPstringToUint32(argIP)
-	var mask32 uint32 = mask2Unt32(argMask)
+	var mask32 uint32 = mask2Uint32(argMask)
 	var ipOctets [4]uint8 = convertUint32ToOctets(ip32)
 	var maskOctets [4]uint8 = convertUint32ToOctets(mask32)
 	fmt.Printf("IP: %d, mask %d,\n", ip32, mask32)
