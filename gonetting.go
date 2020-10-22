@@ -52,21 +52,24 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	// Parse the ip and mask
 	IPstringToArray(ipArgPtr, uint8(len(argIP)), ipArrayPtr)
 	maskStringToArray(argMask, maskArrayPtr)
-
-
+	
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
 		fmt.Printf("in %d subnets\n", argN)
+		// Reserve memory for the new addresses
+
+		// Call the subnetting function
+		getSubnets(ipArrayPtr,argMask,)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 	}
 }
 
-func IPstringToArray (ipStringPointer *string, size uint8, ipArrayPointer *[4]uint8) {
+func IPstringToArray (netwStrPtr *string, size uint8, netwArrayPtr *[4]uint8) {
 	var dots uint    // Number of dots to know which octet
 	var mul byte = 1 // Weight of the parsed number in the string
 	var ipOctets [4]uint8
-	var ipString = *ipStringPointer
+	var ipString = *netwStrPtr
 
 	// Read the IP backwards
 	for i := size - 1; i > 0; i-- {
@@ -79,7 +82,7 @@ func IPstringToArray (ipStringPointer *string, size uint8, ipArrayPointer *[4]ui
 		}
 		// Which ip octet to parse depends on the dots we encountered
 	}
-	*ipArrayPointer = ipOctets 
+	*netwArrayPtr = ipOctets 
 	fmt.Printf("IP: %d.%d.%d.%d\n", ipOctets[0], ipOctets[1], ipOctets[2], ipOctets[3])
 }
 
@@ -105,4 +108,15 @@ func maskOctet(n uint8) (uint8) {
 		default:
 			return uint8(math.Pow(float64(2),float64(8-n))) + maskOctet(n-1)
 	}
+}
+
+func log2S(n uint8) (log uint8){
+	// Get the real log2
+	var res float64 = math.Log2(float64(n))
+
+	// If the real log2 is not an integer we add 1 more
+	if( res - float64(int64(res)) == 0.0 ) {
+		return uint8(res)
+	}
+	return uint8(res+1)
 }
