@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt" // Print
 	"math"
 	"os"      // Arguments passed to the program
@@ -40,11 +41,14 @@ func help() {
 	fmt.Printf("[%s] Help menu: \n", os.Args[0])
 }
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
-	// De-reference parameter
-
 	// Parse the ip and mask
-	IPstringToUint32(argIP)
-	mask2Unt32(argMask)
+	var ip32 uint32 = IPstringToUint32(argIP)
+	var mask32 uint32 = mask2Unt32(argMask)
+	var ipOctets [4]uint8 = convertUint32ToOctets(ip32)
+	var maskOctets [4]uint8 = convertUint32ToOctets(mask32)
+	fmt.Printf("IP: %d, mask %d,\n", ip32, mask32)
+	fmt.Println(ipOctets)
+	fmt.Println(maskOctets)
 
 	fmt.Printf("Subnetting %s ", argIP)
 	if argMode == 'n' {
@@ -75,7 +79,7 @@ func IPstringToUint32(netwStr string) uint32 {
 	return IP
 }
 
-func mask2Unt32(mask uint8) uint32 {
+func mask2Uint32(mask uint8) uint32 {
 	var mask32 uint32 = 0
 	var i uint32
 	for i = 31; i >= 0 && mask != 0; i-- {
@@ -83,6 +87,17 @@ func mask2Unt32(mask uint8) uint32 {
 		mask--
 	}
 	return mask32
+}
+
+func convertUint32ToOctets(address uint32) [4]uint8 {
+	var octets [4]uint8
+	h := address
+	a := make([]byte, 4)
+	binary.LittleEndian.PutUint32(a, h)
+	for i := 0; i < 4; i++ {
+		octets[i] = a[i]
+	}
+	return octets
 }
 
 func log2S(n uint32) (log uint32) {
