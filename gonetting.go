@@ -26,6 +26,9 @@ func main() {
 	case "--help":
 		help()
 		break
+	case "super":
+		//supernetting
+		break
 	default:
 		if len(os.Args) < 5 {
 			fmt.Println("Not enough arguments. See --help")
