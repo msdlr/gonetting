@@ -6,10 +6,6 @@ import (
 	"os"  // Arguments passed to the program
 )
 
-func help() {
-	fmt.Printf("[%s] Help menu: \n", os.Args[0])
-}
-
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	// up to /32 mask
 	if argMask == 32 {
@@ -38,6 +34,10 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 		netwSlice = calculateSubnets(netw32, argMask, newMask)
 	}
 	printNetwSlice(netwSlice, newMask)
+}
+
+func supernetting(networks []uint32, mask uint8) {
+
 }
 
 func calculateSubnets(network uint32, oldmask uint8, newmask uint8) []uint32 {
