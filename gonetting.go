@@ -52,7 +52,7 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	var newMask uint8 = argMask
 	fmt.Printf("Subnetting %s ", argIP)
 	var netw32 uint32 = IPstringToUint32(argIP)
-
+	convertUint32ToOctets(netw32)
 	if argMode == 'n' {
 		fmt.Printf("in %d subnets\n", PowUint(2, log2S(uint32(argN))))
 		newMask += uint8(log2S(uint32(argN)))
@@ -73,7 +73,7 @@ func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	for i = 0; i < num; i = i + (1 << offset) {
 		var newNetw uint32 = network + uint32(num << offset)
 		netwkSlice = append(netwkSlice, newNetw)
-		convertUint32ToOctets(newNetw)
+		//convertUint32ToOctets(newNetw)
 	}
 	return netwkSlice
 }
@@ -90,10 +90,12 @@ func IPstringToUint32(netwStr string) uint32 {
 			mul = 1
 			dots++
 		} else {
-			IP += uint32(netwStr[i]-'0') * PowUint(256, uint32(dots))
+			//IP += uint32(netwStr[i]-'0') * PowUint(256, uint32(dots))
+			IP += uint32(netwStr[i]-'0')* uint32(mul) << (uint8(8) * dots)
 			mul *= 10
 		}
 	}
+	//convertUint32ToOctets(IP)
 	return IP
 }
 
@@ -107,15 +109,9 @@ func mask2Uint32(mask uint8) uint32 {
 	return mask32
 }
 
-func convertUint32ToOctets(address uint32) [4]uint8 {
-	var octets [4]uint8
-	h := address
-	a := make([]byte, 4)
-	binary.LittleEndian.PutUint32(a, h)
-	for i := 0; i < 4; i++ {
-		octets[i] = a[i]
-	}
-	return octets
+func convertUint32ToOctets(address uint32) (octets [4]uint8) {
+	binary.BigEndian.PutUint32(octets[0:4], uint32(address))
+	return
 }
 
 func log2S(n uint32) (log uint32) {
