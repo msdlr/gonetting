@@ -16,7 +16,7 @@ Arguments:
 func main() {
 	// Param checking
 	if len(os.Args) < 2 {
-		fmt.Printf("No args, type  %s --help for help\n", os.Args[0])
+		help()
 		os.Exit(1)
 	}
 
@@ -62,5 +62,9 @@ func callSupernetting() {
 }
 
 func help() {
-	fmt.Printf("[%s] Help menu: \n", os.Args[0])
+	fmt.Printf("[%s] Help: \n", os.Args[0])
+	fmt.Println("Possible combinations of arguments:")
+	fmt.Println("-sub A.B.C.D [1-30] -n [2,4,8]\tSubnetting by number of networks")
+	fmt.Println("-sub A.B.C.D [1-30] -h x\tSubnetting by number of hosts per subnet")
+	fmt.Println("-super n A.B.C.D A.B.C.D mask\tSummarize networks into one address")
 }
