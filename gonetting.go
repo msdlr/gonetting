@@ -53,7 +53,7 @@ func callSupernetting() {
 		for i := 0; i < int(rgN); i++ {
 			networks = append(networks, IPstringToUint32(os.Args[i+3]))
 		}
-		argNetmask, _ := strconv.ParseInt(os.Args[3], 10, 0)
+		argNetmask, _ := strconv.ParseInt(os.Args[len(os.Args)-1], 10, 0)
 		supernetting(networks, uint8(argNetmask))
 	} else {
 		fmt.Println("Not enough arguments. See --help")

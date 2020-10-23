@@ -37,7 +37,28 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 }
 
 func supernetting(networks []uint32, mask uint8) {
+	// Check that the networks are possible to merge
+	//var correct bool = true
+	var mask32 = mask2Uint32(mask)
+	var newMask uint8 = mask - uint8(log2S(uint32(len(networks))))
+	var newMask32 uint32 = mask2Uint32(newMask)
+	var octets [4]uint8
+	for i := 0; i < len(networks); i++ {
+		// Check that all these netwoks are mergeable
+		if i > 0 && (networks[i-1]|mask32 != networks[i]|mask32) {
+			fmt.Println("Networks can't be merged")
+			os.Exit(1)
+		}
+	}
 
+	// Print which networks to summarize
+	for i := 0; i < len(networks); i++ {
+		octets = convertUint32ToOctets(networks[i])
+		fmt.Printf("[%d.%d.%d.%d/%d]\n", octets[0], octets[1], octets[2], octets[3], mask)
+	}
+	octets = convertUint32ToOctets(networks[0] & newMask32)
+	fmt.Printf("\t=\n[%d.%d.%d.%d/%d]\n", octets[0], octets[1], octets[2], octets[3], newMask)
+	//fmt.Printf("Mask\t%b\n", mask2Uint32(mask))
 }
 
 func calculateSubnets(network uint32, oldmask uint8, newmask uint8) []uint32 {
