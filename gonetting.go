@@ -51,18 +51,29 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 
 	var newMask uint8 = argMask
 	fmt.Printf("Subnetting %s ", argIP)
+	var netw32 uint32 = IPstringToUint32(argIP)
+
 	if argMode == 'n' {
 		fmt.Printf("in %d subnets\n", PowUint(2, log2S(uint32(argN))))
 		newMask += uint8(log2S(uint32(argN)))
+		divideNetwork(netw32, argMask, newMask)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 		newMask = uint8(log2S(PowUint(2, uint32(argN))))
 	}
-	fmt.Println("A")
 }
 
-func divideNetwork(network uint32, oldmask uint32, newmask uint32) []uint8{
-	
+func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
+	// var num uint8 = uint8(log2S(uint32(newmask) - uint32(oldmask)))
+	// var offset uint32 = 32 - uint32(newmask)
+	// var i uint8 = 0
+	// var netwkSlice []uint32
+	// for i = oldmask; i <= num; i++ {
+	// 	var newNetw uint32 = network + uint32(num << offset)
+	// 	netwkSlice = append(netwkSlice, newNetw)
+	// 	convertUint32ToOctets(newNetw)
+	// }
+	// return netwkSlice
 }
 
 // Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
