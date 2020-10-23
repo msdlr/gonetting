@@ -61,6 +61,10 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	fmt.Println("A")
 }
 
+func divideNetwork(network uint32, oldmask uint32, newmask uint32){
+	
+}
+
 // Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
 func IPstringToUint32(netwStr string) uint32 {
 	var IP uint32 = 0
