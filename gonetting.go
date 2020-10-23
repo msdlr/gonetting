@@ -76,8 +76,7 @@ func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	var offset uint32 = 32 - uint32(newmask)
 	var i uint32 = 0
 	var netwkSlice []uint32
-	//netwkSlice = append(netwkSlice, network)
-	convertUint32ToOctets(network)
+	// Calculate the new network addresses
 	for i = 0; i < num; i++ {
 		var newNetw uint32 = network + uint32(i << offset)
 		netwkSlice = append(netwkSlice, newNetw)
@@ -110,6 +109,7 @@ func IPstringToUint32(netwStr string) uint32 {
 func mask2Uint32(mask uint8) uint32 {
 	var mask32 uint32 = 0
 	var i uint32
+	// Add one ^ (32-n) for every bit == 1
 	for i = 31; i >= 0 && mask != 0; i-- {
 		mask32 += 1 << i
 		mask--
@@ -118,10 +118,12 @@ func mask2Uint32(mask uint8) uint32 {
 }
 
 func convertUint32ToOctets(address uint32) (octets [4]uint8) {
+	// We just copy the contents of the uint32 into 4 uint8s
 	binary.BigEndian.PutUint32(octets[0:4], uint32(address))
 	return
 }
 
+// Log2 of a number but increments 1 if not exact
 func log2S(n uint32) (log uint32) {
 	// Get the real log2
 	var res float64 = math.Log2(float64(n))
