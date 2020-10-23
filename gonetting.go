@@ -70,10 +70,10 @@ func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	var netwkSlice []uint32
 	//netwkSlice = append(netwkSlice, network)
 	convertUint32ToOctets(network)
-	for i = 0; i < num; i = i + (1 << offset) {
-		var newNetw uint32 = network + uint32(num << offset)
+	for i = 0; i < num; i++ {
+		var newNetw uint32 = network + uint32(i << offset)
 		netwkSlice = append(netwkSlice, newNetw)
-		//convertUint32ToOctets(newNetw)
+		convertUint32ToOctets(newNetw)
 	}
 	return netwkSlice
 }
