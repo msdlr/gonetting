@@ -57,8 +57,9 @@ func supernetting(networks []uint32, mask uint8) {
 		fmt.Printf("[%d.%d.%d.%d/%d]\n", octets[0], octets[1], octets[2], octets[3], mask)
 	}
 	octets = convertUint32ToOctets(networks[0] & newMask32)
-	fmt.Printf("\t=\n[%d.%d.%d.%d/%d]\n", octets[0], octets[1], octets[2], octets[3], newMask)
-	//fmt.Printf("Mask\t%b\n", mask2Uint32(mask))
+	fmt.Printf("\t=\n[%d.%d.%d.%d/%d \t%d.%d.%d.%d - ", octets[0], octets[1], octets[2], octets[3], newMask, octets[0], octets[1], octets[2], octets[3]+1)
+	octets = convertUint32ToOctets((networks[0] & newMask32) | (0xFFFFFFFF - newMask32))
+	fmt.Printf("%d.%d.%d.%d]", octets[0], octets[1], octets[2], octets[3])
 }
 
 func calculateSubnets(network uint32, oldmask uint8, newmask uint8) []uint32 {
