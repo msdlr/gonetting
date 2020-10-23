@@ -3,8 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt" // Print
-	"math"
-	"os" // Arguments passed to the program
+	"os"  // Arguments passed to the program
 )
 
 func help() {
@@ -28,15 +27,16 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 		fmt.Printf("in %d subnets\n", 1<<log2S(uint32(argN)))
 		// New mask = mask + log2S(n)
 		newMask += uint8(log2S(uint32(argN)))
-		divideNetwork(netw32, argMask, newMask)
+		divideNetworkModeN(netw32, argMask, newMask)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 		// New mask = 32 - log2( 2 ^ h )
-		newMask = 32 - uint8(log2S(1<<uint32(argN)))
+		newMask = 32 - uint8(log2S(uint32(argN+2)))
+		divideNetworkModeN(netw32, argMask, newMask)
 	}
 }
 
-func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
+func divideNetworkModeN(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	// Number of networks
 	var num uint32 = 2 << (newmask - oldmask - 1)
 	// Numbers of the new mask that are set to 0
@@ -91,12 +91,12 @@ func convertUint32ToOctets(address uint32) (octets [4]uint8) {
 
 // Log2 of a number but increments 1 if not exact
 func log2S(n uint32) (log uint32) {
-	// Get the real log2
-	var res float64 = math.Log2(float64(n))
-
-	// If the real log2 is not an integer we add 1 more
-	if res-float64(int64(res)) == 0.0 {
-		return uint32(res)
+	for i := 1; i < 31; i++ {
+		// Find which 2^i is equal or bigger than n
+		if n <= 1<<i {
+			log = uint32(i)
+			break
+		}
 	}
-	return uint32(res + 1)
+	return log
 }
