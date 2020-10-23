@@ -58,14 +58,14 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 
 	
 	if argMode == 'n' {
-		fmt.Printf("in %d subnets\n", PowUint(2, log2S(uint32(argN))))
+		fmt.Printf("in %d subnets\n", 1 << log2S(uint32(argN)))
 		// New mask = mask + log2S(n)
 		newMask += uint8(log2S(uint32(argN)))
 		divideNetwork(netw32, argMask, newMask)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
 		// New mask = 32 - log2( 2 ^ h )
-		newMask = 32 - uint8(log2S(PowUint(2, uint32(argN))))
+		newMask = 32 - uint8(log2S(1 << uint32(argN)))
 	}
 }
 
@@ -80,7 +80,7 @@ func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	for i = 0; i < num; i++ {
 		var newNetw uint32 = network + uint32(i << offset)
 		netwkSlice = append(netwkSlice, newNetw)
-		//convertUint32ToOctets(newNetw)
+		convertUint32ToOctets(newNetw)
 	}
 	return netwkSlice
 }
@@ -102,7 +102,6 @@ func IPstringToUint32(netwStr string) uint32 {
 			mul *= 10
 		}
 	}
-	//convertUint32ToOctets(IP)
 	return IP
 }
 
@@ -133,14 +132,4 @@ func log2S(n uint32) (log uint32) {
 		return uint32(res)
 	}
 	return uint32(res + 1)
-}
-
-func PowUint(base uint32, num uint32) (result uint32) {
-	if num == 0 {
-		return 1
-	} else if num == 1 {
-		return base
-	} else {
-		return base * PowUint(base, num-1)
-	}
 }
