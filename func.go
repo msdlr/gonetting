@@ -17,26 +17,30 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	}
 
 	var newMask uint8 = argMask
-	fmt.Printf("Subnetting %s ", argIP)
+	fmt.Printf("Subnetting [%s/%d] ", argIP, argMask)
 
 	// Convert ip as string to uint32
 	var netw32 uint32 = IPstringToUint32(argIP)
 	convertUint32ToOctets(netw32)
 
+	// Get the slice of networks as uint32
+	var netwSlice []uint32
+
 	if argMode == 'n' {
-		fmt.Printf("in %d subnets\n", 1<<log2S(uint32(argN)))
 		// New mask = mask + log2S(n)
 		newMask += uint8(log2S(uint32(argN)))
-		divideNetworkModeN(netw32, argMask, newMask)
+		fmt.Printf("in %d /%d subnets\n", 1<<log2S(uint32(argN)), newMask)
+		netwSlice = calculateSubnets(netw32, argMask, newMask)
 	} else if argMode == 'h' {
-		fmt.Printf("in subnets for %d users\n", argN)
 		// New mask = 32 - log2( 2 ^ h )
 		newMask = 32 - uint8(log2S(uint32(argN+2)))
-		divideNetworkModeN(netw32, argMask, newMask)
+		fmt.Printf("in /%d subnets for %d users (size %d)\n", newMask, argN, 1<<log2S(uint32(argN+2)))
+		netwSlice = calculateSubnets(netw32, argMask, newMask)
 	}
+	printNetwSlice(netwSlice, newMask)
 }
 
-func divideNetworkModeN(network uint32, oldmask uint8, newmask uint8) []uint32 {
+func calculateSubnets(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	// Number of networks
 	var num uint32 = 2 << (newmask - oldmask - 1)
 	// Numbers of the new mask that are set to 0
@@ -52,7 +56,16 @@ func divideNetworkModeN(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	return netwkSlice
 }
 
-// Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
+func printNetwSlice(slice []uint32, mask uint8) {
+	var octets [4]uint8
+
+	for i := 0; i < len(slice); i++ {
+		octets = convertUint32ToOctets(slice[i])
+		fmt.Printf("%d:\t[%d.%d.%d.%d/%d]\n", i+1, octets[0], octets[1], octets[2], octets[3], mask)
+	}
+}
+
+// IPstringToUint32 parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
 func IPstringToUint32(netwStr string) uint32 {
 	var IP uint32 = 0
 	var dots uint8   // Number of dots to know which octet
