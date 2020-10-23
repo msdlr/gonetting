@@ -82,7 +82,11 @@ func printNetwSlice(slice []uint32, mask uint8) {
 
 	for i := 0; i < len(slice); i++ {
 		octets = convertUint32ToOctets(slice[i])
-		fmt.Printf("%d:\t[%d.%d.%d.%d/%d]\n", i+1, octets[0], octets[1], octets[2], octets[3], mask)
+		fmt.Printf("%d:\t[%d.%d.%d.%d/%d]\t", i+1, octets[0], octets[1], octets[2], octets[3], mask)
+		fmt.Printf("[%d.%d.%d.%d - ", octets[0], octets[1], octets[2], octets[3]+1)
+		var lastHost uint32 = slice[i] | (0xFFFFFFFF - mask2Uint32(mask))
+		octets = convertUint32ToOctets(lastHost)
+		fmt.Printf("%d.%d.%d.%d]\n", octets[0], octets[1], octets[2], octets[3])
 	}
 }
 
