@@ -64,16 +64,18 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 }
 
 func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
-	// var num uint8 = uint8(log2S(uint32(newmask) - uint32(oldmask)))
-	// var offset uint32 = 32 - uint32(newmask)
-	// var i uint8 = 0
-	// var netwkSlice []uint32
-	// for i = oldmask; i <= num; i++ {
-	// 	var newNetw uint32 = network + uint32(num << offset)
-	// 	netwkSlice = append(netwkSlice, newNetw)
-	// 	convertUint32ToOctets(newNetw)
-	// }
-	// return netwkSlice
+	var num uint32 = 2 << (newmask-oldmask-1) 
+	var offset uint32 = 32 - uint32(newmask)
+	var i uint32 = 0
+	var netwkSlice []uint32
+	//netwkSlice = append(netwkSlice, network)
+	convertUint32ToOctets(network)
+	for i = 0; i < num; i = i + (1 << offset) {
+		var newNetw uint32 = network + uint32(num << offset)
+		netwkSlice = append(netwkSlice, newNetw)
+		convertUint32ToOctets(newNetw)
+	}
+	return netwkSlice
 }
 
 // Parses an ip address in A.B.C.D format and converts it to a 32 bits unsigned int
