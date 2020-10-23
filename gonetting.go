@@ -44,27 +44,35 @@ func help() {
 	fmt.Printf("[%s] Help menu: \n", os.Args[0])
 }
 func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
-
+	// up to /32 mask
 	if argMask == 32 {
 		os.Exit(1)
 	}
 
 	var newMask uint8 = argMask
 	fmt.Printf("Subnetting %s ", argIP)
+
+	// Convert ip as string to uint32
 	var netw32 uint32 = IPstringToUint32(argIP)
 	convertUint32ToOctets(netw32)
+
+	
 	if argMode == 'n' {
 		fmt.Printf("in %d subnets\n", PowUint(2, log2S(uint32(argN))))
+		// New mask = mask + log2S(n)
 		newMask += uint8(log2S(uint32(argN)))
 		divideNetwork(netw32, argMask, newMask)
 	} else if argMode == 'h' {
 		fmt.Printf("in subnets for %d users\n", argN)
-		newMask = uint8(log2S(PowUint(2, uint32(argN))))
+		// New mask = 32 - log2( 2 ^ h )
+		newMask = 32 - uint8(log2S(PowUint(2, uint32(argN))))
 	}
 }
 
 func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
-	var num uint32 = 2 << (newmask-oldmask-1) 
+	// Number of networks
+	var num uint32 = 2 << (newmask-oldmask-1)
+	// Numbers of the new mask that are set to 0
 	var offset uint32 = 32 - uint32(newmask)
 	var i uint32 = 0
 	var netwkSlice []uint32
@@ -73,7 +81,7 @@ func divideNetwork(network uint32, oldmask uint8, newmask uint8) []uint32 {
 	for i = 0; i < num; i++ {
 		var newNetw uint32 = network + uint32(i << offset)
 		netwkSlice = append(netwkSlice, newNetw)
-		convertUint32ToOctets(newNetw)
+		//convertUint32ToOctets(newNetw)
 	}
 	return netwkSlice
 }
