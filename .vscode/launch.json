@@ -5,23 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": "supernetting",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
             "env": {},
-            //"args": ["-super","4","255.255.0.0","255.255.64.0","255.255.128.0","255.255.192.0", "18"]
-            "args": ["-sub","1.1.0.0", "16", "-n", "4"]
+            "args": ["-super","4","255.255.0.0","255.255.64.0","255.255.128.0","255.255.192.0", "18"]
         },
         {
-            "name": "Launch",
+            "name": "subnetting",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
             "env": {},
-            "args": []
+            "args": ["-sub","1.1.0.0", "16", "-n", "4"]
         }
     ]
 }
