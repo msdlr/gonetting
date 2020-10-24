@@ -11,9 +11,11 @@ func subnetting(argIP string, argMask uint8, argMode uint8, argN uint8) {
 	if argMask == 32 {
 		os.Exit(1)
 	}
+	// Octets of the mask
+	var maskOctets [4]uint8 = convertUint32ToOctets(mask2Uint32(argMask))
 
 	var newMask uint8 = argMask
-	fmt.Printf("Subnetting [%s/%d] ", argIP, argMask)
+	fmt.Printf("Subnetting [%s/%d] (mask: %d.%d.%d.%d) ", argIP, argMask, maskOctets[0], maskOctets[1], maskOctets[2], maskOctets[3])
 
 	// Convert ip as string to uint32
 	var netw32 uint32 = IPstringToUint32(argIP)
